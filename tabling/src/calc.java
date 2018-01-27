@@ -3,8 +3,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import simple.OperatorAction;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class calc {
 
@@ -25,6 +30,8 @@ public class calc {
 	private JButton btnNewButton_6;
 	private JButton btnNewButton_7;
 	String display = "";
+	 int currentCalc;
+	 int calcOperation =0;
 	private JButton btnC;
 
 	/**
@@ -61,11 +68,13 @@ public class calc {
 		
 		JButton btnNewButton = new JButton(" 1");
 		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				display = textField.getText();
 				textField.setText(display + "1");
 			}
 		});
+		
+		
 		btnNewButton.setBounds(52, 80, 64, 31);
 		frame.getContentPane().add(btnNewButton);
 		
@@ -78,7 +87,7 @@ public class calc {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				display = textField.getText();
-				textField.setText(display + "2");
+				textField.setText(display + Integer.parseInt("2"));
 			}
 		});
 		btnNewButton_1.setBounds(150, 80, 70, 31);
@@ -174,46 +183,91 @@ public class calc {
 		button_5.setBounds(146, 190, 74, 23);
 		frame.getContentPane().add(button_5);
 		
+		
 		button_6 = new JButton("+");
+		button_6.setActionCommand("+");
 		button_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				display = textField.getText();
-				textField.setText(display + "+");
+				textField.setText("");
 			}
 		});
+
 		button_6.setBounds(345, 84, 89, 23);
-		frame.getContentPane().add(button_6);
 		
-		btnNewButton_5 = new JButton("-");
+		frame.getContentPane().add(button_6);
+		 OperatorAction addAction = new OperatorAction(1);
+	       button_6.addActionListener(addAction);
+		
+	       
+	       
+	       btnNewButton_5 = new JButton("-");
+	       btnNewButton_5.setActionCommand("-");
 		btnNewButton_5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				display = textField.getText();
-				textField.setText(display + "-");
+				textField.setText("");
 			}
 		});
 		btnNewButton_5.setBounds(345, 122, 89, 23);
 		frame.getContentPane().add(btnNewButton_5);
+		OperatorAction subAction = new OperatorAction(2);
+		btnNewButton_5.addActionListener(subAction);
 		
 		btnNewButton_6 = new JButton("/");
+		  btnNewButton_6.setActionCommand("/");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				display = textField.getText();
-				textField.setText(display + "/");
+				textField.setText("");
 			}
 		});
 		btnNewButton_6.setBounds(345, 156, 89, 23);
 		frame.getContentPane().add(btnNewButton_6);
+		OperatorAction divAction = new OperatorAction(3);
+		btnNewButton_6.addActionListener(divAction);
 		
 		btnNewButton_7 = new JButton("=");
-		btnNewButton_7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			  if(textField.getText().equals(button_6.getComponents())) {
-				  int tyu = Integer.parseInt("button_2") + Integer.parseInt("button_3");
-				  String dis = Integer.toString(tyu);
-				  textField.setText(display + dis);
-			  }
+		btnNewButton_7.setActionCommand("=");
+		btnNewButton_7.addActionListener(new ActionListener()
+	        {
+	            @Override
+	            public void actionPerformed(ActionEvent event)
+	            {
+				    int n = 1;
+				    		
+	            	if (!textField.getText().isEmpty() || n == 0 )
+                {
+                    int number = Integer.parseInt(textField.getText()); 
+                 
+                    if (calcOperation == 1)
+                    {
+                    
+                        int calculate = currentCalc  + number;
+                         
+                        textField.setText(""+Integer.toString(calculate));
+                        
+                    }
+                    else if (calcOperation == 2)
+                    {
+                        int calculate = currentCalc  - number;
+                        textField.setText("" + Integer.toString(calculate));
+                    }
+                    else if (calcOperation == 3) {
+                    	int calculate = (currentCalc/number);
+                    	textField.setText("" + Integer.toString(calculate));
+                    }
+                    else if (calcOperation == 4) {
+                    	int calculate = (currentCalc * number);
+                    	textField.setText(Integer.toString(calculate));
+                    }
+                   
+                }
+	 
 			}
-		});
+	            
+	            });
+	
 		btnNewButton_7.setBounds(345, 190, 89, 23);
 		frame.getContentPane().add(btnNewButton_7);
 		
@@ -228,4 +282,31 @@ public class calc {
 		btnC.setBounds(239, 190, 64, 23);
 		frame.getContentPane().add(btnC);
 	}
-}
+	  public void actionPerformed(ActionEvent event)
+	    {
+	        //get the Action Command text from the button
+	        String action = event.getActionCommand();
+	        
+	        //set the text using the Action Command text
+	        textField.setText(action);       
+	    }
+	 private class OperatorAction implements ActionListener
+	    {
+	        private int operator;
+	        
+	        public OperatorAction(int operation)
+	        {
+	            operator = operation;
+	        }
+	        
+	        public void actionPerformed(ActionEvent event)
+	        {
+	            currentCalc = Integer.parseInt(textField.getText()); 
+	            calcOperation = operator;
+	        }
+	    }
+	}
+
+
+
+
